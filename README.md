@@ -1,5 +1,15 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-onchain`]().
+# Onramp Asset Availability
 
+This project provides a UI for checking Coinbase Onramp Asset availability by country and state. Users can select their location to see which digital assets are available for purchase in their region.
+
+Built with [Next.js](https://nextjs.org) and styled with Tailwind CSS.
+
+## Features
+
+- Country and state selection
+- Asset availability checking
+- Responsive design
+- Loading states for better user experience
 
 ## Getting Started
 
@@ -29,11 +39,20 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
+- `app/components` - UI components for the application
+- `app/svg` - SVG components for icons
+- `app/page.tsx` - Main application page
+- `app/providers.tsx` - React context providers
 
 ## Learn More
 
-To learn more about OnchainKit, see our [documentation](https://onchainkit.xyz/getting-started).
+To learn more about the technologies used:
 
-To learn more about Next.js, see the [Next.js documentation](https://nextjs.org/docs).
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+
+## Repository
+
+The code is hosted on [GitHub](https://github.com/esteban-cb/onramp-asset-availability).
