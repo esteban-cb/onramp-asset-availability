@@ -2,6 +2,7 @@
 
 import type { OnrampOptionsResponseData } from '@coinbase/onchainkit/fund';
 import { useEffect, useState, useMemo } from 'react';
+import Image from 'next/image';
 
 // Define the types based on the API documentation
 interface PurchaseCurrency {
@@ -21,7 +22,11 @@ interface Network {
 
 interface PaymentCurrency {
   id: string;
-  limits: any[];
+  limits: {
+    min?: string;
+    max?: string;
+    [key: string]: string | undefined;
+  }[];
   iconUrl: string;
 }
 
@@ -43,14 +48,14 @@ export const AssetList = ({ options }: AssetListProps) => {
     
     // Extract assets and currencies from the API response
     try {
-      const optionsAny = options as any;
+      const optionsData = options as OnrampOptionsResponseData;
       
       // Get the correct properties based on the OnrampOptionsResponseData type
-      const purchaseCurrenciesData = optionsAny.purchaseCurrencies || [];
-      const paymentCurrenciesData = optionsAny.paymentCurrencies || [];
+      const purchaseCurrenciesData = optionsData.purchaseCurrencies || [];
+      const paymentCurrenciesData = optionsData.paymentCurrencies || [];
       
-      setPurchaseCurrencies(purchaseCurrenciesData);
-      setPaymentCurrencies(paymentCurrenciesData);
+      setPurchaseCurrencies(purchaseCurrenciesData as unknown as PurchaseCurrency[]);
+      setPaymentCurrencies(paymentCurrenciesData as unknown as PaymentCurrency[]);
 
       // Extract unique networks for the filter dropdown
       const networks = new Set<string>();
@@ -230,9 +235,11 @@ export const AssetList = ({ options }: AssetListProps) => {
                   <td className="px-4 py-2">
                     <div className="flex items-center">
                       {asset.iconUrl && (
-                        <img 
+                        <Image 
                           src={asset.iconUrl} 
                           alt={asset.name} 
+                          width={32}
+                          height={32}
                           className="w-8 h-8 mr-3 rounded-full"
                         />
                       )}

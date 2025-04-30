@@ -1,17 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { OnrampConfigResponseData } from '@coinbase/onchainkit/fund';
 
-// Define the country type based on the OnrampConfigResponseData structure
-interface Country {
-  isoAlpha2Code: string;
-  name: string;
-  paymentMethods: string[];
+interface CountryData {
+  id: string;
+  [key: string]: unknown;
 }
 
 interface CountrySelectorProps {
-  countries: any[];
+  countries: CountryData[];
   selectedCountry: string;
   onCountryChange: (country: string) => void;
 }
@@ -21,7 +18,7 @@ export const CountrySelector = ({
   selectedCountry, 
   onCountryChange 
 }: CountrySelectorProps) => {
-  const [sortedCountries, setSortedCountries] = useState<any[]>([]);
+  const [sortedCountries, setSortedCountries] = useState<CountryData[]>([]);
   
   useEffect(() => {
     // Add debugging to see country data

@@ -1,0 +1,26 @@
+# Development
+.git
+.github
+node_modules
+npm-debug.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage
+__tests__
+*.test.*
+*.spec.*
+
+# Build output
+.next
+out
+build
+dist
+
+# Misc
+README.md
+LICENSE
+*.log 
