@@ -2,7 +2,6 @@
 
 import type { OnrampOptionsResponseData } from '@coinbase/onchainkit/fund';
 import { useEffect, useState, useMemo } from 'react';
-import Image from 'next/image';
 
 // Define the types based on the API documentation
 interface PurchaseCurrency {
@@ -234,14 +233,31 @@ export const AssetList = ({ options }: AssetListProps) => {
                 <tr key={asset.id} className="border-t border-gray-700">
                   <td className="px-4 py-2">
                     <div className="flex items-center">
-                      {asset.iconUrl && (
-                        <Image 
+                      {asset.iconUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img 
                           src={asset.iconUrl} 
                           alt={asset.name} 
-                          width={32}
-                          height={32}
-                          className="w-8 h-8 mr-3 rounded-full"
+                          className="w-8 h-8 mr-3 rounded-full bg-gray-200"
+                          onError={(e) => {
+                            // Replace with fallback icon (first letter of asset name in a circle)
+                            const target = e.currentTarget;
+                            const parent = target.parentNode;
+                            if (parent) {
+                              // Create fallback element
+                              const fallback = document.createElement('div');
+                              fallback.className = 'w-8 h-8 mr-3 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold';
+                              fallback.textContent = asset.name.charAt(0).toUpperCase();
+                              // Replace the img with the fallback
+                              parent.replaceChild(fallback, target);
+                            }
+                          }}
                         />
+                      ) : (
+                        // Display fallback directly if no iconUrl
+                        <div className="w-8 h-8 mr-3 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                          {asset.name.charAt(0).toUpperCase()}
+                        </div>
                       )}
                       <div className="font-medium">{asset.name}</div>
                     </div>
