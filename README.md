@@ -4,6 +4,32 @@ This project provides a UI for checking Coinbase Onramp Asset availability by co
 
 Built with [Next.js](https://nextjs.org) and styled with Tailwind CSS.
 
+## Deployment on Vercel
+
+### Environment Variables Setup
+
+When deploying to Vercel, you need to set up the following environment variables:
+
+1. Public variables (available to the browser):
+   - `NEXT_PUBLIC_ONCHAINKIT_PROJECT_ID` - Your project ID
+   - `NEXT_PUBLIC_ONCHAINKIT_WALLET_CONFIG` - Set to "smartWalletOnly"
+
+2. Server-side variables (not exposed to the browser):
+   - `ONCHAINKIT_API_KEY` - Your API key (stored securely, not with NEXT_PUBLIC prefix)
+
+![Environment Variables Configuration](docs/env-vars-example.png)
+
+### Important Security Note
+
+Never use `NEXT_PUBLIC_` prefix for sensitive values like API keys, as this makes them visible in the client-side code. This application uses a secure server-side API route to keep your API key protected.
+
+## Local Development
+
+1. Clone the repository
+2. Create `.env.local` file with the required environment variables
+3. Run `npm install`
+4. Run `npm run dev`
+
 ## Features
 
 - Country and state selection
