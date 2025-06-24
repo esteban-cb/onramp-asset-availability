@@ -2,6 +2,7 @@ import '@coinbase/onchainkit/styles.css';
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from './providers';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: 'Coinbase Onramp Asset Availability',
@@ -17,6 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-background dark">
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
