@@ -7,6 +7,9 @@ import { Analytics } from '@vercel/analytics/next';
 export const metadata: Metadata = {
   title: 'Coinbase Onramp Asset Availability',
   description: 'Check Coinbase Onramp Asset availability by country and state',
+  verification: {
+    google: 'I4SwnIeX_JET5qiPSPywvXY-4gaqTQrEd16qHzUqGVQ',
+  },
 };
 
 export default function RootLayout({
