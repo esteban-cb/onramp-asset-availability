@@ -5,6 +5,7 @@ import type { OnrampConfigResponseData, OnrampOptionsResponseData } from '@coinb
 import { CountrySelector } from '@/app/components/CountrySelector';
 import { StateSelector } from '@/app/components/StateSelector';
 import { AssetList } from '@/app/components/AssetList';
+import { PaymentMethodsList } from '@/app/components/PaymentMethodsList';
 import { Loading } from '@/app/components/Loading';
 
 export default function Home() {
@@ -81,29 +82,29 @@ export default function Home() {
   useEffect(() => {
     const getOptions = async () => {
       if (!selectedCountry) return;
-      
+
       try {
         setLoadingAssets(true);
         setError(null);
-        
+
         console.log(`Fetching asset options for ${selectedCountry}${selectedState ? ', ' + selectedState : ''}`);
-        
+
         // Use our secure API route instead of direct fetchOnrampOptions call
         const url = new URL('/api/onchainkit', window.location.origin);
         url.searchParams.append('operation', 'getOptions');
         url.searchParams.append('country', selectedCountry);
-        
+
         if (selectedCountry === 'US' && selectedState) {
           url.searchParams.append('subdivision', selectedState);
         }
-        
+
         const response = await fetch(url, {
           cache: 'no-store',
           headers: {
             'Cache-Control': 'no-cache'
           }
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json().catch(() => null);
           console.error('API error response:', errorData);
@@ -111,15 +112,15 @@ export default function Home() {
             errorData?.message || `Failed to fetch options (Status: ${response.status})`
           );
         }
-        
+
         const optionsData = await response.json();
-        
+
         console.log('Options data received');
-        
+
         if (!optionsData) {
           throw new Error('Invalid options data received');
         }
-        
+
         setOptions(optionsData);
         setLoadingAssets(false);
       } catch (error) {
@@ -153,10 +154,10 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-6 md:p-24 relative">
       <h1 className="text-4xl font-bold mb-8">Coinbase Onramp Asset Availability Checker</h1>
-      
+
       <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">Select Location</h2>
-        
+
         {loading ? (
           <Loading />
         ) : error ? (
@@ -176,12 +177,12 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-4">
-            <CountrySelector 
-              countries={config?.countries || []} 
+            <CountrySelector
+              countries={config?.countries || []}
               selectedCountry={selectedCountry}
               onCountryChange={handleCountryChange}
             />
-            
+
             {selectedCountry === 'US' && (
               <StateSelector
                 selectedState={selectedState}
@@ -191,6 +192,13 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {config && selectedCountry ? (
+        <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6 mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Available Payment Methods</h2>
+          <PaymentMethodsList config={config} country={selectedCountry} />
+        </div>
+      ) : null}
 
       {loadingAssets ? (
         <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6">

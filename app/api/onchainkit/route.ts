@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { 
-  fetchOnrampConfig as fetchConfig, 
-  fetchOnrampOptions as fetchOptions 
+import {
+  fetchOnrampConfig as fetchConfig,
+  fetchOnrampOptions as fetchOptions
 } from '@coinbase/onchainkit/fund';
 
 // The API key is only available on the server
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     // Get query parameters
     const searchParams = request.nextUrl.searchParams;
     const operation = searchParams.get('operation');
-    
+
     console.log(`API Route called - Operation: ${operation}`);
     console.log(`Using API_KEY: ${API_KEY ? 'API key is set' : 'API key is missing'}`);
 
@@ -26,10 +26,37 @@ export async function GET(request: NextRequest) {
       const configData = await fetchConfig(API_KEY);
       console.log('Config fetched successfully');
       return NextResponse.json(configData);
+    } else if (operation === 'getBuyConfig') {
+      const country = searchParams.get('country');
+
+      console.log(`Fetching buy config for country: ${country || 'all countries'}`);
+
+      // Fetch payment methods config from Coinbase API
+      // This uses the direct API endpoint since onchainkit may not expose this
+      const url = country
+        ? `https://api.developer.coinbase.com/onramp/v1/buy/config?country=${country}`
+        : 'https://api.developer.coinbase.com/onramp/v1/buy/config';
+
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Buy config API error:', errorText);
+        throw new Error(`Failed to fetch buy config: ${response.status} ${errorText}`);
+      }
+
+      const buyConfigData = await response.json();
+      console.log('Buy config fetched successfully');
+      return NextResponse.json(buyConfigData);
     } else if (operation === 'getOptions') {
       const country = searchParams.get('country');
       const subdivision = searchParams.get('subdivision');
-      
+
       console.log(`Fetching options for country: ${country}, subdivision: ${subdivision || 'none'}`);
 
       if (!country) {
@@ -45,7 +72,7 @@ export async function GET(request: NextRequest) {
         subdivision: subdivision || undefined,
         apiKey: API_KEY
       });
-      
+
       console.log('Options fetched successfully');
       return NextResponse.json(optionsData);
     }
@@ -58,8 +85,8 @@ export async function GET(request: NextRequest) {
     console.error('API route error:', error);
     // Provide more detailed error response
     return NextResponse.json(
-      { 
-        error: 'Internal server error', 
+      {
+        error: 'Internal server error',
         message: error instanceof Error ? error.message : 'Unknown error',
         stack: process.env.NODE_ENV === 'development' && error instanceof Error ? error.stack : undefined
       },
