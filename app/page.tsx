@@ -166,31 +166,31 @@ export default function Home() {
         <Box
           as="header"
           width="100%"
-          background="bgElevation1"
-          borderColor="bgLine"
-          borderRadius={400}
-          borderWidth={100}
-          elevation={1}
-          padding={{ base: 2, tablet: 3 }}
+          paddingX={{ base: 0, tablet: 1 }}
+          paddingY={1}
         >
-          <VStack alignItems="center" gap={2} textAlign="center">
-            <HStack alignItems="center" gap={1.5} justifyContent="center">
+          <HStack
+            alignItems="center"
+            flexWrap="wrap"
+            gap={2}
+            justifyContent="space-between"
+          >
+            <HStack alignItems="center" gap={1.5}>
               <Box background="bgPrimaryWash" borderRadius={1000} padding={1}>
                 <Icon name="currencies" size="m" color="fgPrimary" active />
               </Box>
-              <Text as="h1" font={{ base: 'title3', tablet: 'title1' }} color="fg">
-                Coinbase Onramp Asset Availability Checker
-              </Text>
+              <VStack gap={0.25}>
+                <Text as="h1" font={{ base: 'title3', tablet: 'title1' }} color="fg">
+                  Coinbase Onramp Asset Availability Checker
+                </Text>
+                <Text as="p" font="body" color="fgMuted">
+                  Choose a location to see supported payment methods and assets.
+                </Text>
+              </VStack>
             </HStack>
 
-            <VStack gap={0.5} alignItems="center">
-              <Text as="p" font="body" color="fgMuted">
-                Choose a location to see supported payment methods and assets.
-              </Text>
-            </VStack>
-
             <ThemeToggle />
-          </VStack>
+          </HStack>
         </Box>
 
         <Box
