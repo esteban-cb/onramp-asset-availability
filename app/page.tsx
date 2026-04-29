@@ -163,20 +163,35 @@ export default function Home() {
       justifyContent="center"
     >
       <VStack gap={4} maxWidth="960px" width="100%">
-        <HStack justifyContent="space-between" alignItems="flex-start" gap={3} flexWrap="wrap">
-          <VStack gap={1} alignItems={{ base: 'center', tablet: 'flex-start' }}>
-            <HStack alignItems="center" gap={1}>
-              <Icon name="currencies" size="m" color="fgPrimary" active />
-              <Text as="h1" font={{ base: 'title1', tablet: 'display3' }} color="fg">
+        <Box
+          as="header"
+          width="100%"
+          background="bgElevation1"
+          borderColor="bgLine"
+          borderRadius={400}
+          borderWidth={100}
+          elevation={1}
+          padding={{ base: 2, tablet: 3 }}
+        >
+          <VStack alignItems="center" gap={2} textAlign="center">
+            <HStack alignItems="center" gap={1.5} justifyContent="center">
+              <Box background="bgPrimaryWash" borderRadius={1000} padding={1}>
+                <Icon name="currencies" size="m" color="fgPrimary" active />
+              </Box>
+              <Text as="h1" font={{ base: 'title3', tablet: 'title1' }} color="fg">
                 Coinbase Onramp Asset Availability Checker
               </Text>
             </HStack>
-            <Text as="p" font="body" color="fgMuted">
-              Choose a location to see supported payment methods and assets.
-            </Text>
+
+            <VStack gap={0.5} alignItems="center">
+              <Text as="p" font="body" color="fgMuted">
+                Choose a location to see supported payment methods and assets.
+              </Text>
+            </VStack>
+
+            <ThemeToggle />
           </VStack>
-          <ThemeToggle />
-        </HStack>
+        </Box>
 
         <Box
           width="100%"
