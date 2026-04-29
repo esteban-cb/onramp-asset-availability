@@ -187,7 +187,7 @@ export const AssetList = ({ options }: AssetListProps) => {
           value={symbolFilter}
           onChange={(e) => setSymbolFilter(e.target.value)}
         />
-        <VStack gap={1}>
+        <VStack className="cds-form-field" gap={1}>
           <Text as="label" htmlFor="network-filter" font="label1" color="fg">
             Filter by Network
           </Text>
@@ -196,14 +196,8 @@ export const AssetList = ({ options }: AssetListProps) => {
             id="network-filter"
             value={networkFilter}
             onChange={(e) => setNetworkFilter(e.target.value)}
-            background={networkFilter ? 'bgPrimaryWash' : 'bg'}
-            borderColor={networkFilter ? 'bgLinePrimary' : 'bgLineHeavy'}
-            borderRadius={200}
-            borderWidth={100}
-            color="fg"
-            font="body"
-            padding={2}
-            width="100%"
+            className="cds-native-select"
+            data-active={networkFilter ? 'true' : 'false'}
           >
             <option value="">All Networks</option>
             {availableNetworks.map((network) => (

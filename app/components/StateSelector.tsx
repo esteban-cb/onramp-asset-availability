@@ -73,7 +73,7 @@ export const StateSelector = ({
   onStateChange 
 }: StateSelectorProps) => {
   return (
-    <VStack gap={1}>
+    <VStack className="cds-form-field" gap={1}>
       <Text as="label" htmlFor="state-select" font="label1" color="fg">
         Select State/Territory
       </Text>
@@ -82,14 +82,7 @@ export const StateSelector = ({
         id="state-select"
         value={selectedState}
         onChange={(e) => onStateChange(e.target.value)}
-        background="bg"
-        borderColor="bgLineHeavy"
-        borderRadius={200}
-        borderWidth={100}
-        color="fg"
-        font="body"
-        padding={2}
-        width="100%"
+        className="cds-native-select"
       >
         <option value="">-- Select a state --</option>
         {US_STATES.map((state) => (

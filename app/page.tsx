@@ -179,7 +179,7 @@ export default function Home() {
           elevation={1}
           padding={3}
         >
-          <VStack gap={3}>
+          <VStack className="cds-form-field" gap={3}>
             <Text as="h2" font="title3" color="fg">
               Select Location
             </Text>
@@ -236,7 +236,7 @@ export default function Home() {
             elevation={1}
             padding={3}
           >
-            <VStack gap={3}>
+            <VStack className="cds-form-field" gap={3}>
               <Text as="h2" font="title3" color="fg">
                 Available Payment Methods
               </Text>
@@ -267,7 +267,7 @@ export default function Home() {
             elevation={1}
             padding={3}
           >
-            <VStack gap={3}>
+            <VStack className="cds-form-field" gap={3}>
               <Text as="h2" font="title3" color="fg">
                 Available Assets
               </Text>

@@ -50,7 +50,7 @@ export const CountrySelector = ({
   }, [countries]);
 
   return (
-    <VStack gap={1}>
+    <VStack className="cds-form-field" gap={1}>
       <Text as="label" htmlFor="country-select" font="label1" color="fg">
         Select Country
       </Text>
@@ -59,14 +59,7 @@ export const CountrySelector = ({
         id="country-select"
         value={selectedCountry}
         onChange={(e) => onCountryChange(e.target.value)}
-        background="bg"
-        borderColor="bgLineHeavy"
-        borderRadius={200}
-        borderWidth={100}
-        color="fg"
-        font="body"
-        padding={2}
-        width="100%"
+        className="cds-native-select"
       >
         <option value="">-- Select a country --</option>
         {sortedCountries.map((country) => {

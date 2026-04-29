@@ -6,6 +6,27 @@ body {
   min-height: 100vh;
 }
 
+.cds-form-field {
+  width: 100%;
+}
+
+.cds-native-select {
+  width: 100%;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  border: var(--borderWidth-100) solid var(--color-bgLineHeavy);
+  border-radius: var(--borderRadius-200);
+  padding: var(--space-2);
+  font-family: var(--fontFamily-body);
+  font-size: var(--fontSize-body);
+  line-height: var(--lineHeight-body);
+}
+
+.cds-native-select[data-active='true'] {
+  background: var(--color-bgPrimaryWash);
+  border-color: var(--color-bgLinePrimary);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
