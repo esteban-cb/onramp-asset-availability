@@ -1,12 +1,18 @@
 'use client';
 
 import { Box } from '@coinbase/cds-web/layout';
-import { Spinner } from '@coinbase/cds-web/loaders';
+import { ProgressCircle } from '@coinbase/cds-web/visualizations';
 
 export const Loading = () => {
   return (
     <Box display="flex" justifyContent="center" paddingY={4}>
-      <Spinner size={4} color="fgPrimary" accessibilityLabel="Loading" />
+      <ProgressCircle
+        indeterminate
+        accessibilityLabel="Loading"
+        color="fgPrimary"
+        hideContent
+        size={40}
+      />
     </Box>
   );
 };

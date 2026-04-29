@@ -191,20 +191,19 @@ export const AssetList = ({ options }: AssetListProps) => {
           onChange={(e) => setSymbolFilter(e.target.value)}
         />
         <SelectField
-          id="network-filter"
           label="Filter by Network"
           value={networkFilter}
           onChange={setNetworkFilter}
           iconName="filter"
-          active={Boolean(networkFilter)}
-        >
-          <option value="">All Networks</option>
-          {availableNetworks.map((network) => (
-            <option key={network} value={network}>
-              {network}
-            </option>
-          ))}
-        </SelectField>
+          placeholder="All Networks"
+          options={[
+            { value: null, label: 'All Networks' },
+            ...availableNetworks.map((network) => ({
+              value: network,
+              label: network,
+            })),
+          ]}
+        />
       </Box>
 
       <Box overflow="auto">

@@ -73,19 +73,15 @@ export const StateSelector = ({
 }: StateSelectorProps) => {
   return (
     <SelectField
-      id="state-select"
       label="Select State/Territory"
       value={selectedState}
       onChange={onStateChange}
       iconName="location"
-      active={Boolean(selectedState)}
-    >
-      <option value="">-- Select a state --</option>
-      {US_STATES.map((state) => (
-        <option key={state.code} value={state.code}>
-          {state.name}
-        </option>
-      ))}
-    </SelectField>
+      placeholder="-- Select a state --"
+      options={US_STATES.map((state) => ({
+        value: state.code,
+        label: state.name,
+      }))}
+    />
   );
 };

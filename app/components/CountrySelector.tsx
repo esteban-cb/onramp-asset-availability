@@ -50,29 +50,24 @@ export const CountrySelector = ({
 
   return (
     <SelectField
-      id="country-select"
       label="Select Country"
       value={selectedCountry}
       onChange={onCountryChange}
       iconName="globe"
-      active={Boolean(selectedCountry)}
-    >
-      <option value="">-- Select a country --</option>
-      {sortedCountries.map((country) => {
+      placeholder="-- Select a country --"
+      options={sortedCountries.map((country) => {
         // Based on the type definitions, use id as the country code
         const code = country.id || '';
         // Use the country code as the display name since the API doesn't seem to provide a name
         const displayName = getCountryName(code) || code;
 
-        if (!code) return null;
-
-        return (
-          <option key={code} value={code}>
-            {displayName}
-          </option>
-        );
+        return {
+          value: code,
+          label: displayName,
+          disabled: !code,
+        };
       })}
-    </SelectField>
+    />
   );
 };
 
