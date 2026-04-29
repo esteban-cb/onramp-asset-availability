@@ -1,5 +1,7 @@
 'use client';
 
+import { SelectField } from '@/app/components/SelectField';
+
 interface StateSelectorProps {
   selectedState: string;
   onStateChange: (state: string) => void;
@@ -70,23 +72,16 @@ export const StateSelector = ({
   onStateChange 
 }: StateSelectorProps) => {
   return (
-    <div>
-      <label htmlFor="state-select" className="block mb-2 font-medium">
-        Select State/Territory
-      </label>
-      <select
-        id="state-select"
-        value={selectedState}
-        onChange={(e) => onStateChange(e.target.value)}
-        className={`border border-gray-300 rounded-md p-2 w-full bg-white text-black`}
-      >
-        <option value="" style={{ backgroundColor: 'white', color: 'black' }}>-- Select a state --</option>
-        {US_STATES.map((state) => (
-          <option key={state.code} value={state.code} style={{ backgroundColor: 'white', color: 'black' }}>
-            {state.name}
-          </option>
-        ))}
-      </select>
-    </div>
+    <SelectField
+      label="Select State/Territory"
+      value={selectedState}
+      onChange={onStateChange}
+      iconName="location"
+      placeholder="-- Select a state --"
+      options={US_STATES.map((state) => ({
+        value: state.code,
+        label: state.name,
+      }))}
+    />
   );
-}; 
+};

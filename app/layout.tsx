@@ -1,4 +1,7 @@
 import '@coinbase/onchainkit/styles.css';
+import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import '@coinbase/cds-web/defaultFontStyles';
+import '@coinbase/cds-web/globalStyles';
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from './providers';
@@ -19,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-background dark">
+      <body>
         <Providers>{children}</Providers>
         <Analytics />
       </body>

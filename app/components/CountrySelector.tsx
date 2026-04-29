@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { SelectField } from '@/app/components/SelectField';
 
 interface CountryData {
   id: string;
@@ -21,9 +22,6 @@ export const CountrySelector = ({
   const [sortedCountries, setSortedCountries] = useState<CountryData[]>([]);
   
   useEffect(() => {
-    // Add debugging to see country data
-    console.log('Countries data:', countries);
-    
     if (!countries || countries.length === 0) {
       setSortedCountries([]);
       return;
@@ -51,33 +49,25 @@ export const CountrySelector = ({
   }, [countries]);
 
   return (
-    <div>
-      <label htmlFor="country-select" className="block mb-2 font-medium">
-        Select Country
-      </label>
-      <select
-        id="country-select"
-        value={selectedCountry}
-        onChange={(e) => onCountryChange(e.target.value)}
-        className={`border border-gray-300 rounded-md p-2 w-full bg-white text-black`}
-      >
-        <option value="" style={{ backgroundColor: 'white', color: 'black' }}>-- Select a country --</option>
-        {sortedCountries.map((country) => {
-          // Based on the type definitions, use id as the country code
-          const code = country.id || '';
-          // Use the country code as the display name since the API doesn't seem to provide a name
-          const displayName = getCountryName(code) || code;
-          
-          if (!code) return null;
-          
-          return (
-            <option key={code} value={code} style={{ backgroundColor: 'white', color: 'black' }}>
-              {displayName}
-            </option>
-          );
-        })}
-      </select>
-    </div>
+    <SelectField
+      label="Select Country"
+      value={selectedCountry}
+      onChange={onCountryChange}
+      iconName="globe"
+      placeholder="-- Select a country --"
+      options={sortedCountries.map((country) => {
+        // Based on the type definitions, use id as the country code
+        const code = country.id || '';
+        // Use the country code as the display name since the API doesn't seem to provide a name
+        const displayName = getCountryName(code) || code;
+
+        return {
+          value: code,
+          label: displayName,
+          disabled: !code,
+        };
+      })}
+    />
   );
 };
 
@@ -112,4 +102,4 @@ function getCountryName(countryCode: string): string {
   };
 
   return countries[countryCode] || countryCode;
-} 
+}
