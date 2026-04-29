@@ -7,8 +7,10 @@ import { StateSelector } from '@/app/components/StateSelector';
 import { AssetList } from '@/app/components/AssetList';
 import { PaymentMethodsList } from '@/app/components/PaymentMethodsList';
 import { Loading } from '@/app/components/Loading';
-import { Box, VStack } from '@coinbase/cds-web/layout';
+import { ThemeToggle } from '@/app/components/ThemeToggle';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Button } from '@coinbase/cds-web/buttons';
+import { Icon } from '@coinbase/cds-web/icons';
 import { Text } from '@coinbase/cds-web/typography';
 
 export default function Home() {
@@ -161,14 +163,20 @@ export default function Home() {
       justifyContent="center"
     >
       <VStack gap={4} maxWidth="960px" width="100%">
-        <VStack gap={1} alignItems="center" textAlign="center">
-          <Text as="h1" font={{ base: 'title1', tablet: 'display3' }} color="fg">
-            Coinbase Onramp Asset Availability Checker
-          </Text>
-          <Text as="p" font="body" color="fgMuted">
-            Choose a location to see supported payment methods and assets.
-          </Text>
-        </VStack>
+        <HStack justifyContent="space-between" alignItems="flex-start" gap={3} flexWrap="wrap">
+          <VStack gap={1} alignItems={{ base: 'center', tablet: 'flex-start' }}>
+            <HStack alignItems="center" gap={1}>
+              <Icon name="currencies" size="m" color="fgPrimary" active />
+              <Text as="h1" font={{ base: 'title1', tablet: 'display3' }} color="fg">
+                Coinbase Onramp Asset Availability Checker
+              </Text>
+            </HStack>
+            <Text as="p" font="body" color="fgMuted">
+              Choose a location to see supported payment methods and assets.
+            </Text>
+          </VStack>
+          <ThemeToggle />
+        </HStack>
 
         <Box
           width="100%"

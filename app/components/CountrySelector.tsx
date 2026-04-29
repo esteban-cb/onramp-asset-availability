@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { SelectField } from '@/app/components/SelectField';
 
 interface CountryData {
   id: string;
@@ -50,34 +49,30 @@ export const CountrySelector = ({
   }, [countries]);
 
   return (
-    <VStack className="cds-form-field" gap={1}>
-      <Text as="label" htmlFor="country-select" font="label1" color="fg">
-        Select Country
-      </Text>
-      <Box
-        as="select"
-        id="country-select"
-        value={selectedCountry}
-        onChange={(e) => onCountryChange(e.target.value)}
-        className="cds-native-select"
-      >
-        <option value="">-- Select a country --</option>
-        {sortedCountries.map((country) => {
-          // Based on the type definitions, use id as the country code
-          const code = country.id || '';
-          // Use the country code as the display name since the API doesn't seem to provide a name
-          const displayName = getCountryName(code) || code;
-          
-          if (!code) return null;
-          
-          return (
-            <option key={code} value={code}>
-              {displayName}
-            </option>
-          );
-        })}
-      </Box>
-    </VStack>
+    <SelectField
+      id="country-select"
+      label="Select Country"
+      value={selectedCountry}
+      onChange={onCountryChange}
+      iconName="globe"
+      active={Boolean(selectedCountry)}
+    >
+      <option value="">-- Select a country --</option>
+      {sortedCountries.map((country) => {
+        // Based on the type definitions, use id as the country code
+        const code = country.id || '';
+        // Use the country code as the display name since the API doesn't seem to provide a name
+        const displayName = getCountryName(code) || code;
+
+        if (!code) return null;
+
+        return (
+          <option key={code} value={code}>
+            {displayName}
+          </option>
+        );
+      })}
+    </SelectField>
   );
 };
 

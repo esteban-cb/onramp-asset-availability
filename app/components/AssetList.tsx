@@ -9,6 +9,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHeader, TableRow } from
 import { Tag } from '@coinbase/cds-web/tag';
 import { Text } from '@coinbase/cds-web/typography';
 import { TextInput } from '@coinbase/cds-web/controls';
+import { SelectField } from '@/app/components/SelectField';
 
 // Define the types based on the API documentation
 interface PurchaseCurrency {
@@ -155,6 +156,7 @@ export const AssetList = ({ options }: AssetListProps) => {
             onClick={clearFilters}
             variant="secondary"
             compact
+            startIcon="close"
             disabled={!assetFilter && !symbolFilter && !networkFilter}
           >
             Clear Filters
@@ -162,6 +164,7 @@ export const AssetList = ({ options }: AssetListProps) => {
           <Button
             onClick={exportToCSV}
             compact
+            startIcon="download"
           >
             Export to CSV
           </Button>
@@ -187,26 +190,21 @@ export const AssetList = ({ options }: AssetListProps) => {
           value={symbolFilter}
           onChange={(e) => setSymbolFilter(e.target.value)}
         />
-        <VStack className="cds-form-field" gap={1}>
-          <Text as="label" htmlFor="network-filter" font="label1" color="fg">
-            Filter by Network
-          </Text>
-          <Box
-            as="select"
-            id="network-filter"
-            value={networkFilter}
-            onChange={(e) => setNetworkFilter(e.target.value)}
-            className="cds-native-select"
-            data-active={networkFilter ? 'true' : 'false'}
-          >
-            <option value="">All Networks</option>
-            {availableNetworks.map((network) => (
-              <option key={network} value={network}>
-                {network}
-              </option>
-            ))}
-          </Box>
-        </VStack>
+        <SelectField
+          id="network-filter"
+          label="Filter by Network"
+          value={networkFilter}
+          onChange={setNetworkFilter}
+          iconName="filter"
+          active={Boolean(networkFilter)}
+        >
+          <option value="">All Networks</option>
+          {availableNetworks.map((network) => (
+            <option key={network} value={network}>
+              {network}
+            </option>
+          ))}
+        </SelectField>
       </Box>
 
       <Box overflow="auto">

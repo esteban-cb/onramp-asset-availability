@@ -11,6 +11,7 @@ body {
 }
 
 .cds-native-select {
+  appearance: none;
   width: 100%;
   background: var(--color-bg);
   color: var(--color-fg);
@@ -20,11 +21,28 @@ body {
   font-family: var(--fontFamily-body);
   font-size: var(--fontSize-body);
   line-height: var(--lineHeight-body);
+  outline: none;
+  padding-inline-end: var(--space-6);
 }
 
 .cds-native-select[data-active='true'] {
   background: var(--color-bgPrimaryWash);
   border-color: var(--color-bgLinePrimary);
+}
+
+.cds-native-select:focus-visible {
+  border-color: var(--color-bgLinePrimary);
+  box-shadow: 0 0 0 var(--borderWidth-200) var(--color-bgLinePrimarySubtle);
+}
+
+.cds-native-select-icon {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  pointer-events: none;
+  position: absolute;
+  right: var(--space-2);
+  top: 0;
 }
 
 @layer utilities {

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import type { OnrampConfigResponseData } from '@coinbase/onchainkit/fund';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
-import { Avatar } from '@coinbase/cds-web/media';
+import { Icon } from '@coinbase/cds-web/icons';
 import { Table, TableBody, TableCaption, TableCell, TableHeader, TableRow } from '@coinbase/cds-web/tables';
 import { Tag } from '@coinbase/cds-web/tag';
 import { Text } from '@coinbase/cds-web/typography';
@@ -21,6 +21,19 @@ const PAYMENT_METHOD_NAMES: Record<string, string> = {
   RTP: 'Real-Time Payments',
   GUEST_CHECKOUT_APPLE_PAY: 'Guest Checkout - Apple Pay',
 };
+
+const PAYMENT_METHOD_ICONS = {
+  ACH_BANK_ACCOUNT: 'bank',
+  APPLE_PAY: 'appleLogo',
+  CARD: 'card',
+  CRYPTO_ACCOUNT: 'crypto',
+  FIAT_WALLET: 'wallet',
+  GUEST_CHECKOUT_APPLE_PAY: 'appleLogo',
+  GUEST_CHECKOUT_CARD: 'card',
+  PAYPAL: 'paypal',
+  RTP: 'cashUSD',
+  UNSPECIFIED: 'payments',
+} as const;
 
 interface PaymentMethodsListProps {
   config: OnrampConfigResponseData | null;
@@ -73,11 +86,25 @@ export const PaymentMethodsList = ({ config, country }: PaymentMethodsListProps)
             {paymentMethods.map((method, index) => {
               const methodKey = method.id || 'UNSPECIFIED';
               const displayName = PAYMENT_METHOD_NAMES[methodKey] || methodKey;
+              const iconName =
+                PAYMENT_METHOD_ICONS[methodKey as keyof typeof PAYMENT_METHOD_ICONS] || 'payments';
 
               return (
                 <TableRow key={`${methodKey}-${index}`}>
                   <TableCell
-                    start={<Avatar name={displayName} size="xl" />}
+                    start={
+                      <Box
+                        background="bgPrimaryWash"
+                        borderRadius={1000}
+                        padding={1}
+                      >
+                        <Icon
+                          name={iconName}
+                          size="m"
+                          color="fgPrimary"
+                        />
+                      </Box>
+                    }
                     title={displayName}
                   />
                   <TableCell direction="horizontal">
