@@ -7,6 +7,9 @@ import { StateSelector } from '@/app/components/StateSelector';
 import { AssetList } from '@/app/components/AssetList';
 import { PaymentMethodsList } from '@/app/components/PaymentMethodsList';
 import { Loading } from '@/app/components/Loading';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Text } from '@coinbase/cds-web/typography';
 
 export default function Home() {
   const [config, setConfig] = useState<OnrampConfigResponseData | null>(null);
@@ -25,9 +28,7 @@ export default function Home() {
         setLoading(true);
         setError(null);
         setConfigError(null);
-        
-        console.log('Fetching configuration data...');
-        
+
         // Use our secure API route instead of direct fetchOnrampConfig call
         const response = await fetch('/api/onchainkit?operation=getConfig', {
           // Add cache control to prevent stale data
@@ -39,16 +40,17 @@ export default function Home() {
         
         if (!response.ok) {
           const errorData = await response.json().catch(() => null);
-          console.error('API error response:', errorData);
+          console.error('API error response', {
+            status: response.status,
+            message: errorData?.message,
+          });
           throw new Error(
             errorData?.message || `Failed to fetch config (Status: ${response.status})`
           );
         }
         
         const configData = await response.json();
-        
-        console.log('Raw config data:', configData);
-        
+
         if (!configData || !configData.countries || !Array.isArray(configData.countries)) {
           throw new Error('Invalid configuration data received');
         }
@@ -87,8 +89,6 @@ export default function Home() {
         setLoadingAssets(true);
         setError(null);
 
-        console.log(`Fetching asset options for ${selectedCountry}${selectedState ? ', ' + selectedState : ''}`);
-
         // Use our secure API route instead of direct fetchOnrampOptions call
         const url = new URL('/api/onchainkit', window.location.origin);
         url.searchParams.append('operation', 'getOptions');
@@ -107,15 +107,16 @@ export default function Home() {
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => null);
-          console.error('API error response:', errorData);
+          console.error('API error response', {
+            status: response.status,
+            message: errorData?.message,
+          });
           throw new Error(
             errorData?.message || `Failed to fetch options (Status: ${response.status})`
           );
         }
 
         const optionsData = await response.json();
-
-        console.log('Options data received');
 
         if (!optionsData) {
           throw new Error('Invalid options data received');
@@ -138,7 +139,6 @@ export default function Home() {
   }, [selectedCountry, selectedState]);
 
   const handleCountryChange = (country: string) => {
-    console.log(`Country changed to: ${country}`);
     setSelectedCountry(country);
     setSelectedState('');
     setOptions(null);
@@ -146,74 +146,150 @@ export default function Home() {
   };
 
   const handleStateChange = (state: string) => {
-    console.log(`State changed to: ${state}`);
     setSelectedState(state);
     setError(null);
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-6 md:p-24 relative">
-      <h1 className="text-4xl font-bold mb-8">Coinbase Onramp Asset Availability Checker</h1>
+    <Box
+      as="main"
+      minHeight="100vh"
+      background="bg"
+      color="fg"
+      padding={{ base: 3, tablet: 6 }}
+      display="flex"
+      justifyContent="center"
+    >
+      <VStack gap={4} maxWidth="960px" width="100%">
+        <VStack gap={1} alignItems="center" textAlign="center">
+          <Text as="h1" font={{ base: 'title1', tablet: 'display3' }} color="fg">
+            Coinbase Onramp Asset Availability Checker
+          </Text>
+          <Text as="p" font="body" color="fgMuted">
+            Choose a location to see supported payment methods and assets.
+          </Text>
+        </VStack>
 
-      <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6 mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Select Location</h2>
+        <Box
+          width="100%"
+          background="bgElevation1"
+          borderColor="bgLine"
+          borderRadius={400}
+          borderWidth={100}
+          elevation={1}
+          padding={3}
+        >
+          <VStack gap={3}>
+            <Text as="h2" font="title3" color="fg">
+              Select Location
+            </Text>
 
-        {loading ? (
-          <Loading />
-        ) : error ? (
-          <div className="text-center py-4">
-            <p className="text-red-500 mb-4">{error}</p>
-            {configError && (
-              <div className="bg-red-900/30 p-3 rounded text-sm mb-4 text-left">
-                <p className="font-mono">{configError.message}</p>
-              </div>
+            {loading ? (
+              <Loading />
+            ) : error ? (
+              <VStack gap={2} alignItems="center" paddingY={2}>
+                <Text as="p" font="body" color="fgNegative" textAlign="center">
+                  {error}
+                </Text>
+                {configError && (
+                  <Box
+                    background="bgNegativeWash"
+                    borderColor="bgNegative"
+                    borderRadius={200}
+                    borderWidth={100}
+                    padding={2}
+                    width="100%"
+                  >
+                    <Text as="p" fontFamily="body" font="label2" color="fgNegative">
+                      {configError.message}
+                    </Text>
+                  </Box>
+                )}
+                <Button onClick={retryConfigFetch}>Retry</Button>
+              </VStack>
+            ) : (
+              <VStack gap={3}>
+                <CountrySelector
+                  countries={config?.countries || []}
+                  selectedCountry={selectedCountry}
+                  onCountryChange={handleCountryChange}
+                />
+
+                {selectedCountry === 'US' && (
+                  <StateSelector
+                    selectedState={selectedState}
+                    onStateChange={handleStateChange}
+                  />
+                )}
+              </VStack>
             )}
-            <button
-              onClick={retryConfigFetch}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Retry
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <CountrySelector
-              countries={config?.countries || []}
-              selectedCountry={selectedCountry}
-              onCountryChange={handleCountryChange}
-            />
+          </VStack>
+        </Box>
 
-            {selectedCountry === 'US' && (
-              <StateSelector
-                selectedState={selectedState}
-                onStateChange={handleStateChange}
-              />
-            )}
-          </div>
-        )}
-      </div>
+        {config && selectedCountry ? (
+          <Box
+            width="100%"
+            background="bgElevation1"
+            borderColor="bgLine"
+            borderRadius={400}
+            borderWidth={100}
+            elevation={1}
+            padding={3}
+          >
+            <VStack gap={3}>
+              <Text as="h2" font="title3" color="fg">
+                Available Payment Methods
+              </Text>
+              <PaymentMethodsList config={config} country={selectedCountry} />
+            </VStack>
+          </Box>
+        ) : null}
 
-      {config && selectedCountry ? (
-        <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Available Payment Methods</h2>
-          <PaymentMethodsList config={config} country={selectedCountry} />
-        </div>
-      ) : null}
-
-      {loadingAssets ? (
-        <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6">
-          <Loading />
-        </div>
-      ) : options ? (
-        <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4">Available Assets</h2>
-          <AssetList options={options} />
-        </div>
-      ) : error && selectedCountry && (selectedCountry !== 'US' || selectedState) ? (
-        <div className="w-full max-w-4xl bg-white/5 rounded-lg p-6 text-center">
-          <p className="text-red-500">{error}</p>
-        </div>
-      ) : null}
-    </main>
+        {loadingAssets ? (
+          <Box
+            width="100%"
+            background="bgElevation1"
+            borderColor="bgLine"
+            borderRadius={400}
+            borderWidth={100}
+            elevation={1}
+            padding={3}
+          >
+            <Loading />
+          </Box>
+        ) : options ? (
+          <Box
+            width="100%"
+            background="bgElevation1"
+            borderColor="bgLine"
+            borderRadius={400}
+            borderWidth={100}
+            elevation={1}
+            padding={3}
+          >
+            <VStack gap={3}>
+              <Text as="h2" font="title3" color="fg">
+                Available Assets
+              </Text>
+              <AssetList options={options} />
+            </VStack>
+          </Box>
+        ) : error && selectedCountry && (selectedCountry !== 'US' || selectedState) ? (
+          <Box
+            width="100%"
+            background="bgElevation1"
+            borderColor="bgLine"
+            borderRadius={400}
+            borderWidth={100}
+            elevation={1}
+            padding={3}
+          >
+            <Text as="p" font="body" color="fgNegative" textAlign="center">
+              {error}
+            </Text>
+          </Box>
+        ) : null}
+      </VStack>
+    </Box>
   );
 }

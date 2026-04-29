@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
 
 interface CountryData {
   id: string;
@@ -21,9 +23,6 @@ export const CountrySelector = ({
   const [sortedCountries, setSortedCountries] = useState<CountryData[]>([]);
   
   useEffect(() => {
-    // Add debugging to see country data
-    console.log('Countries data:', countries);
-    
     if (!countries || countries.length === 0) {
       setSortedCountries([]);
       return;
@@ -51,17 +50,25 @@ export const CountrySelector = ({
   }, [countries]);
 
   return (
-    <div>
-      <label htmlFor="country-select" className="block mb-2 font-medium">
+    <VStack gap={1}>
+      <Text as="label" htmlFor="country-select" font="label1" color="fg">
         Select Country
-      </label>
-      <select
+      </Text>
+      <Box
+        as="select"
         id="country-select"
         value={selectedCountry}
         onChange={(e) => onCountryChange(e.target.value)}
-        className={`border border-gray-300 rounded-md p-2 w-full bg-white text-black`}
+        background="bg"
+        borderColor="bgLineHeavy"
+        borderRadius={200}
+        borderWidth={100}
+        color="fg"
+        font="body"
+        padding={2}
+        width="100%"
       >
-        <option value="" style={{ backgroundColor: 'white', color: 'black' }}>-- Select a country --</option>
+        <option value="">-- Select a country --</option>
         {sortedCountries.map((country) => {
           // Based on the type definitions, use id as the country code
           const code = country.id || '';
@@ -71,13 +78,13 @@ export const CountrySelector = ({
           if (!code) return null;
           
           return (
-            <option key={code} value={code} style={{ backgroundColor: 'white', color: 'black' }}>
+            <option key={code} value={code}>
               {displayName}
             </option>
           );
         })}
-      </select>
-    </div>
+      </Box>
+    </VStack>
   );
 };
 
@@ -112,4 +119,4 @@ function getCountryName(countryCode: string): string {
   };
 
   return countries[countryCode] || countryCode;
-} 
+}

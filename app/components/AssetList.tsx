@@ -2,6 +2,13 @@
 
 import type { OnrampOptionsResponseData } from '@coinbase/onchainkit/fund';
 import { useEffect, useState, useMemo } from 'react';
+import { Avatar } from '@coinbase/cds-web/media';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Button } from '@coinbase/cds-web/buttons';
+import { Table, TableBody, TableCaption, TableCell, TableHeader, TableRow } from '@coinbase/cds-web/tables';
+import { Tag } from '@coinbase/cds-web/tag';
+import { Text } from '@coinbase/cds-web/typography';
+import { TextInput } from '@coinbase/cds-web/controls';
 
 // Define the types based on the API documentation
 interface PurchaseCurrency {
@@ -42,9 +49,6 @@ export const AssetList = ({ options }: AssetListProps) => {
   const [availableNetworks, setAvailableNetworks] = useState<string[]>([]);
 
   useEffect(() => {
-    // Log the options data to understand the structure
-    console.log('Asset list options:', options);
-    
     // Extract assets and currencies from the API response
     try {
       const optionsData = options as OnrampOptionsResponseData;
@@ -106,7 +110,7 @@ export const AssetList = ({ options }: AssetListProps) => {
     const link = document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', 'asset-availability.csv');
-    link.style.visibility = 'hidden';
+    link.hidden = true;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -120,169 +124,129 @@ export const AssetList = ({ options }: AssetListProps) => {
 
   if (!purchaseCurrencies.length) {
     return (
-      <div className="text-center py-4">
-        <p className="text-yellow-500">No cryptocurrency assets are available in this location.</p>
-      </div>
+      <Box background="bgWarningWash" borderRadius={200} padding={2}>
+        <Text as="p" font="body" color="fgWarning" textAlign="center">
+          No cryptocurrency assets are available in this location.
+        </Text>
+      </Box>
     );
   }
 
   return (
-    <div>
+    <VStack gap={3}>
       {paymentCurrencies.length > 0 && (
-        <p className="mb-2">
-          <span className="font-medium">Payment Currencies:</span>{' '}
+        <Text as="p" font="body" color="fgMuted">
+          Payment Currencies:{' '}
           {paymentCurrencies.map((currency) => currency.id).join(', ')}
-        </p>
+        </Text>
       )}
-      
-      <div className="flex justify-between items-center mb-4">
-        <p>
-          <span className="font-medium">Available Assets:</span> {purchaseCurrencies.length} 
-          {filteredAssets.length !== purchaseCurrencies.length && 
-            <span className="ml-2 text-sm text-blue-400">(Showing {filteredAssets.length})</span>
-          }
-        </p>
-        <div className="flex gap-2">
-          <button 
+
+      <HStack justifyContent="space-between" alignItems="center" gap={2} flexWrap="wrap">
+        <HStack gap={1} alignItems="center" flexWrap="wrap">
+          <Text as="p" font="body" color="fgMuted">
+            Available Assets: {purchaseCurrencies.length}
+          </Text>
+          {filteredAssets.length !== purchaseCurrencies.length && (
+            <Tag colorScheme="blue">Showing {filteredAssets.length}</Tag>
+          )}
+        </HStack>
+        <HStack gap={1} flexWrap="wrap">
+          <Button
             onClick={clearFilters}
-            className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded text-sm flex items-center"
+            variant="secondary"
+            compact
             disabled={!assetFilter && !symbolFilter && !networkFilter}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
             Clear Filters
-          </button>
-          <button 
+          </Button>
+          <Button
             onClick={exportToCSV}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded text-sm flex items-center"
+            compact
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
             Export to CSV
-          </button>
-        </div>
-      </div>
+          </Button>
+        </HStack>
+      </HStack>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div>
-          <label htmlFor="asset-filter" className="block text-sm font-medium mb-1">
-            Filter by Asset Name
-          </label>
-          <input
-            type="text"
-            id="asset-filter"
-            value={assetFilter}
-            onChange={(e) => setAssetFilter(e.target.value)}
-            placeholder="e.g. Bitcoin"
-            className="w-full bg-white/75 border border-gray-300 rounded p-2"
-            style={{ color: 'black' }}
-          />
-        </div>
-        <div>
-          <label htmlFor="symbol-filter" className="block text-sm font-medium mb-1">
-            Filter by Symbol
-          </label>
-          <input
-            type="text"
-            id="symbol-filter"
-            value={symbolFilter}
-            onChange={(e) => setSymbolFilter(e.target.value)}
-            placeholder="e.g. BTC"
-            className="w-full bg-white/75 border border-gray-300 rounded p-2"
-            style={{ color: 'black' }}
-          />
-        </div>
-        <div>
-          <label htmlFor="network-filter" className="block text-sm font-medium mb-1">
+      <Box
+        display="grid"
+        gap={2}
+        gridTemplateColumns={{ base: '1fr', tablet: 'repeat(3, minmax(0, 1fr))' }}
+      >
+        <TextInput
+          id="asset-filter"
+          label="Filter by Asset Name"
+          placeholder="e.g. Bitcoin"
+          value={assetFilter}
+          onChange={(e) => setAssetFilter(e.target.value)}
+        />
+        <TextInput
+          id="symbol-filter"
+          label="Filter by Symbol"
+          placeholder="e.g. BTC"
+          value={symbolFilter}
+          onChange={(e) => setSymbolFilter(e.target.value)}
+        />
+        <VStack gap={1}>
+          <Text as="label" htmlFor="network-filter" font="label1" color="fg">
             Filter by Network
-          </label>
-          <select
+          </Text>
+          <Box
+            as="select"
             id="network-filter"
             value={networkFilter}
             onChange={(e) => setNetworkFilter(e.target.value)}
-            className={`w-full border border-gray-300 rounded p-2 ${networkFilter ? 'bg-blue-100' : 'bg-white/75'}`}
-            style={{ color: 'black' }}
+            background={networkFilter ? 'bgPrimaryWash' : 'bg'}
+            borderColor={networkFilter ? 'bgLinePrimary' : 'bgLineHeavy'}
+            borderRadius={200}
+            borderWidth={100}
+            color="fg"
+            font="body"
+            padding={2}
+            width="100%"
           >
-            <option value="" style={{ backgroundColor: 'white', color: 'black' }}>All Networks</option>
+            <option value="">All Networks</option>
             {availableNetworks.map((network) => (
-              <option key={network} value={network} style={{ backgroundColor: 'white', color: 'black' }}>
+              <option key={network} value={network}>
                 {network}
               </option>
             ))}
-          </select>
-        </div>
-      </div>
-      
-      <div className="bg-white/10 rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="table-auto min-w-full">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-left">Asset</th>
-                <th className="px-4 py-2 text-left">Symbol</th>
-                <th className="px-4 py-2 text-left">Networks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAssets.map((asset) => (
-                <tr key={asset.id} className="border-t border-gray-700">
-                  <td className="px-4 py-2">
-                    <div className="flex items-center">
-                      {asset.iconUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img 
-                          src={asset.iconUrl} 
-                          alt={asset.name} 
-                          className="w-8 h-8 mr-3 rounded-full bg-gray-200"
-                          onError={(e) => {
-                            // Replace with fallback icon (first letter of asset name in a circle)
-                            const target = e.currentTarget;
-                            const parent = target.parentNode;
-                            if (parent) {
-                              // Create fallback element
-                              const fallback = document.createElement('div');
-                              fallback.className = 'w-8 h-8 mr-3 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold';
-                              fallback.textContent = asset.name.charAt(0).toUpperCase();
-                              // Replace the img with the fallback
-                              parent.replaceChild(fallback, target);
-                            }
-                          }}
-                        />
-                      ) : (
-                        // Display fallback directly if no iconUrl
-                        <div className="w-8 h-8 mr-3 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                          {asset.name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div className="font-medium">{asset.name}</div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2">
-                    {asset.symbol}
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="flex flex-wrap gap-1">
-                      {asset.networks.map((network) => (
-                        <span 
-                          key={network.chainId} 
-                          className="text-xs bg-white/20 rounded px-2 py-1"
-                        >
-                          {network.displayName || network.name}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+          </Box>
+        </VStack>
+      </Box>
+
+      <Box overflow="auto">
+        <Table variant="ruled" bordered compact accessibilityLabel="Available assets">
+          <TableCaption>Available assets</TableCaption>
+          <TableHeader>
+            <TableRow backgroundColor="bgAlternate">
+              <TableCell title="Asset" />
+              <TableCell title="Symbol" />
+              <TableCell title="Networks" />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredAssets.map((asset) => (
+              <TableRow key={asset.id}>
+                <TableCell
+                  start={<Avatar src={asset.iconUrl} name={asset.name} alt={asset.name} size="l" />}
+                  title={asset.name}
+                />
+                <TableCell title={asset.symbol} />
+                <TableCell>
+                  <HStack gap={1} flexWrap="wrap">
+                    {asset.networks.map((network) => (
+                      <Tag key={`${network.chainId}-${network.name}`} colorScheme="gray">
+                        {network.displayName || network.name}
+                      </Tag>
+                    ))}
+                  </HStack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
+    </VStack>
   );
-}; 
+};

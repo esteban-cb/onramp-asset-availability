@@ -1,5 +1,8 @@
 'use client';
 
+import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+
 interface StateSelectorProps {
   selectedState: string;
   onStateChange: (state: string) => void;
@@ -70,23 +73,31 @@ export const StateSelector = ({
   onStateChange 
 }: StateSelectorProps) => {
   return (
-    <div>
-      <label htmlFor="state-select" className="block mb-2 font-medium">
+    <VStack gap={1}>
+      <Text as="label" htmlFor="state-select" font="label1" color="fg">
         Select State/Territory
-      </label>
-      <select
+      </Text>
+      <Box
+        as="select"
         id="state-select"
         value={selectedState}
         onChange={(e) => onStateChange(e.target.value)}
-        className={`border border-gray-300 rounded-md p-2 w-full bg-white text-black`}
+        background="bg"
+        borderColor="bgLineHeavy"
+        borderRadius={200}
+        borderWidth={100}
+        color="fg"
+        font="body"
+        padding={2}
+        width="100%"
       >
-        <option value="" style={{ backgroundColor: 'white', color: 'black' }}>-- Select a state --</option>
+        <option value="">-- Select a state --</option>
         {US_STATES.map((state) => (
-          <option key={state.code} value={state.code} style={{ backgroundColor: 'white', color: 'black' }}>
+          <option key={state.code} value={state.code}>
             {state.name}
           </option>
         ))}
-      </select>
-    </div>
+      </Box>
+    </VStack>
   );
-}; 
+};
