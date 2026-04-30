@@ -11,12 +11,12 @@ import { Text } from '@coinbase/cds-web/typography';
 // Payment method display names
 const PAYMENT_METHOD_NAMES: Record<string, string> = {
   UNSPECIFIED: 'Unspecified',
-  CARD: 'Credit/Debit Card',
+  CARD: 'Debit Card',
   ACH_BANK_ACCOUNT: 'ACH Bank Account',
   APPLE_PAY: 'Apple Pay',
   FIAT_WALLET: 'Fiat Wallet',
   CRYPTO_ACCOUNT: 'Crypto Account',
-  GUEST_CHECKOUT_CARD: 'Guest Checkout - Card',
+  GUEST_CHECKOUT_CARD: 'Guest Checkout - Debit Card',
   PAYPAL: 'PayPal',
   RTP: 'Real-Time Payments',
   GUEST_CHECKOUT_APPLE_PAY: 'Guest Checkout - Apple Pay',
